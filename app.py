@@ -6,25 +6,27 @@ from   base64 			import standard_b64decode as b64decode
 import os
 
 app = Flask(__name__)
-socketio = SocketIO(app,async_mode='threading')
+socketio = SocketIO(app, async_mode='threading')
 
 if 'ACCESS_KEY' in os.environ.keys():
 	token = os.environ['ACCESS_KEY'] # get access key from environment variable
 else:
 	token = "ChangeMe" # replace with your API token
 
-connector = mbed_connector_api.connector(token)
+connector = mbed_connector_api.connector(token, webAddress="https://api.mbedcloud.com")
+connector.debug(True)
 
 @app.route('/')
 def index():
 	# get list of endpoints, for each endpoint get the pattern (/3201/0/5853) value
 	epList = connector.getEndpoints().result
-	for index in range(len(epList)):
-		print "Endpoint Found: ",epList[index]['name']
-		e = connector.getResourceValue(epList[index]['name'],"/3201/0/5853")
+	for idx in range(len(epList)):
+		print "Endpoint Found: ",epList[idx]['name']
+		e = connector.getResourceValue(epList[idx]['name'],"/3201/0/5853")
 		while not e.isDone():
 			None
-		epList[index]['blinkPattern'] = e.result
+                print "HI"
+		epList[idx]['blinkPattern'] = e.result
 	print "Endpoint List :",epList
 	# fill out html using handlebar template
 	handlebarJSON = {'endpoints':epList}
@@ -117,4 +119,4 @@ if __name__ == "__main__":
 	connector.deleteAllSubscriptions()							# remove all subscriptions, start fresh
 	connector.startLongPolling()								# start long polling connector.mbed.com
 	connector.setHandler('notifications', notificationHandler) 	# send 'notifications' to the notificationHandler FN
-	socketio.run(app,host='0.0.0.0', port=8080)
+	socketio.run(app,host='127.0.0.1', port=8002)
