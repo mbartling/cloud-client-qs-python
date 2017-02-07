@@ -24,8 +24,7 @@ def index():
 		print "Endpoint Found: ",epList[idx]['name']
 		e = connector.getResourceValue(epList[idx]['name'],"/3201/0/5853")
 		while not e.isDone():
-			None
-                print "HI"
+			pass
 		epList[idx]['blinkPattern'] = e.result
 	print "Endpoint List :",epList
 	# fill out html using handlebar template
@@ -119,4 +118,4 @@ if __name__ == "__main__":
 	connector.deleteAllSubscriptions()							# remove all subscriptions, start fresh
 	connector.startLongPolling()								# start long polling connector.mbed.com
 	connector.setHandler('notifications', notificationHandler) 	# send 'notifications' to the notificationHandler FN
-	socketio.run(app,host='127.0.0.1', port=8080)
+	socketio.run(app,host='127.0.0.1', port=8002)
