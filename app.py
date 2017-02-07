@@ -119,4 +119,4 @@ if __name__ == "__main__":
 	connector.deleteAllSubscriptions()							# remove all subscriptions, start fresh
 	connector.startLongPolling()								# start long polling connector.mbed.com
 	connector.setHandler('notifications', notificationHandler) 	# send 'notifications' to the notificationHandler FN
-	socketio.run(app,host='127.0.0.1', port=8002)
+	socketio.run(app,host='127.0.0.1', port=8080)
